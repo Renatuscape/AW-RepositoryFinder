@@ -1,0 +1,45 @@
+﻿@model IndexViewModel
+
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+    <p>Enter your Github-username below, and we'll retrieve your data!</p>
+    <form asp-action="Index">
+        <label asp-for="GitHubUserName">User Name</label>
+        <input asp-for="GitHubUserName" />
+
+        <input type="submit" value="Retrieve my user!" />
+    </form>
+
+    @if (!string.IsNullOrEmpty(Model.GitHubUserName))
+    {
+        <div>
+            <p>Here is what we found about you, @Model.GitHubUserName!</p>
+            @if (Model.GitHubUserName is not null && Model.User is not null)
+            {
+                <p>ID: @Model.User.Id</p>
+                <p>Full name: @Model.User.Name</p>
+                <img src="@Model.User.AvatarUrl" width="150" height="150" />
+                <p>Avatar URL: @Model.User.AvatarUrl</p>
+            }
+        </div>
+        @if (Model.Repositories is not null)
+        {
+            <div>
+                @foreach (Repository repo in Model.Repositories)
+                {
+                    <h3>@repo.Name</h3>
+                    <ul>
+                        @if (repo.Languages is not null && repo.Languages.Count > 0)
+                        {
+                            @foreach (KeyValuePair<string, int> lang in repo.Languages)
+                            {
+                                <li>@lang.Key</li>
+                            }                            
+                        }
+
+                    </ul>
+                }
+            </div>
+        }
+    }
+</div>
